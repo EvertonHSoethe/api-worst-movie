@@ -48,6 +48,8 @@ public class MovieService {
             return ResponseEntity.badRequest().body("Empty file");
         }
 
+        jdbcTemplate.execute("DELETE FROM MOVIE");
+
         if (!isCsvHeaderValid(file)) {
             return ResponseEntity.badRequest().body("CSV header is invalid. Expected: year;title;studios;producers;winner");
         }

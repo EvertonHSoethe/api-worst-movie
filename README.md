@@ -14,8 +14,6 @@ Project to test my java knowlodges
 
 * H2 Database
 
-* Springdoc OpenAPI (Swagger)
-
 * Maven
 
 ## ▶️ Running the Project

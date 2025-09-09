@@ -19,6 +19,7 @@ public class MovieMapper {
 
     public static MovieResponseDTO toResponseDTO(Movie movie) {
         return MovieResponseDTO.builder()
+                .id(movie.getId())
                 .releaseYear(movie.getReleaseYear())
                 .title(movie.getTitle())
                 .studios(movie.getStudios())
