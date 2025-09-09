@@ -4,6 +4,7 @@ import com.outsera.api_worst_movie.dto.MovieRequestDTO;
 import com.outsera.api_worst_movie.mapper.MovieMapper;
 import com.outsera.api_worst_movie.model.Movie;
 import com.outsera.api_worst_movie.repository.MovieRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -14,16 +15,11 @@ import java.io.IOException;
 import java.util.Scanner;
 
 @Service
+@AllArgsConstructor
 public class MovieService {
 
     private final MovieRepository movieRepository;
     private final JdbcTemplate jdbcTemplate;
-
-    public MovieService(MovieRepository movieRepository,
-                        JdbcTemplate jdbcTemplate) {
-        this.movieRepository = movieRepository;
-        this.jdbcTemplate = jdbcTemplate;
-    }
 
     public Movie save(MovieRequestDTO movieRequestDTO) {
         return movieRepository.save(MovieMapper.toEntity(movieRequestDTO));
