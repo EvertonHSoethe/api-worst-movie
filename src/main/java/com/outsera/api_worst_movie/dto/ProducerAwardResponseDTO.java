@@ -6,7 +6,7 @@ import lombok.Data;
 @Data
 @Builder
 public class ProducerAwardResponseDTO {
-    private String producer;
+    private String producers;
     private Long interval;
     private Long previousWin;
     private Long followingWin;

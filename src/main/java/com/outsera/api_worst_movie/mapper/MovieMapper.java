@@ -10,9 +10,9 @@ public class MovieMapper {
     public static Movie toEntity(MovieRequestDTO movieRequestDTO) {
         return Movie.builder()
                 .title(movieRequestDTO.getTitle())
-                .producer(movieRequestDTO.getProducer())
-                .studio(movieRequestDTO.getStudio())
-                .worstMovieWinner(movieRequestDTO.isWorstMovieWinner())
+                .producers(movieRequestDTO.getProducers())
+                .studios(movieRequestDTO.getStudios())
+                .winner(movieRequestDTO.isWinner())
                 .releaseYear(movieRequestDTO.getReleaseYear())
                 .build();
     }
@@ -21,9 +21,9 @@ public class MovieMapper {
         return MovieResponseDTO.builder()
                 .releaseYear(movie.getReleaseYear())
                 .title(movie.getTitle())
-                .studio(movie.getStudio())
-                .producer(movie.getProducer())
-                .worstMovieWinner(movie.isWorstMovieWinner())
+                .studios(movie.getStudios())
+                .producers(movie.getProducers())
+                .winner(movie.isWinner())
                 .build();
     }
 }
