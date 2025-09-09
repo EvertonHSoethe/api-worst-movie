@@ -18,12 +18,4 @@ public class Movie {
     private String studio;
     private String producer;
     private boolean worstMovieWinner;
-
-//    public Movie(Long year, String title, String studio, String producer, boolean worstMovieWinner) {
-//        this.releaseYear = year;
-//        this.title = title;
-//        this.studio = studio;
-//        this.producer = producer;
-//        this.worstMovieWinner = worstMovieWinner;
-//    }
 }
