@@ -25,7 +25,7 @@ Project to test my java knowlodges
 * http://localhost:8080
 ### If you want to see the register's on database
 * http://localhost:8080/h2-console
-* **jdbc-url:** jdbc:h2:mem:base_project
+* **jdbc-url:** jdbc:h2:mem:api_worst_movie
 * **command:** SELECT * FROM MOVIE
 
 ## Endpoints disponíveis:
