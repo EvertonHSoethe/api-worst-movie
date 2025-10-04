@@ -11,6 +11,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Table(
+        name = "movie",
+        indexes = {
+                @Index(name = "idx_movie_producer_winner_year", columnList = "winner, releaseYear")
+        }
+)
 public class Movie {
 
     @Id

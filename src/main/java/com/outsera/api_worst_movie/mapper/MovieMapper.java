@@ -23,7 +23,7 @@ public class MovieMapper {
                 .releaseYear(movie.getReleaseYear())
                 .title(movie.getTitle())
                 .studios(movie.getStudios())
-                .producers(movie.getProducers())
+                .producer(movie.getProducers())
                 .winner(movie.isWinner())
                 .build();
     }

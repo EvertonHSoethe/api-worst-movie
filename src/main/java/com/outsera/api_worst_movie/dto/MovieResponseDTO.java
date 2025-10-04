@@ -10,6 +10,6 @@ public class MovieResponseDTO {
     private Long releaseYear;
     private String title;
     private String studios;
-    private String producers;
+    private String producer;
     private boolean winner;
 }

@@ -21,11 +21,11 @@ class ProducerAwardIntervalsControllerIT {
 	void returnMinAndMaxProducerAwardIntervals() throws Exception {
 		mockMvc.perform(get("/v1/producers/award-intervals"))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.min[0].producers").value("Joel Silver"))
+				.andExpect(jsonPath("$.min[0].producer").value("Joel Silver"))
 				.andExpect(jsonPath("$.min[0].interval").value(1))
 				.andExpect(jsonPath("$.min[0].previousWin").value(1990))
 				.andExpect(jsonPath("$.min[0].followingWin").value(1991))
-				.andExpect(jsonPath("$.max[0].producers").value("Matthew Vaughn"))
+				.andExpect(jsonPath("$.max[0].producer").value("Matthew Vaughn"))
 				.andExpect(jsonPath("$.max[0].interval").value(13))
 				.andExpect(jsonPath("$.max[0].previousWin").value(2002))
 				.andExpect(jsonPath("$.max[0].followingWin").value(2015));

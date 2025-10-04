@@ -2,15 +2,16 @@ package com.outsera.api_worst_movie.service;
 
 import com.outsera.api_worst_movie.dto.ProducerAwardIntervalsResponseDTO;
 import com.outsera.api_worst_movie.dto.ProducerAwardResponseDTO;
-import com.outsera.api_worst_movie.model.Movie;
+import com.outsera.api_worst_movie.dto.ProducerWinnerDTO;
 import com.outsera.api_worst_movie.repository.MovieRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -19,41 +20,41 @@ public class ProducerAwardIntervalsService {
     private final MovieRepository movieRepository;
 
     public ProducerAwardIntervalsResponseDTO getProducerAwardIntervals() {
-        var movieList = movieRepository.findAll();
-        var mapOfWinners = transformWinnersToMap(movieList);
+        var winnersList = movieRepository.findWinnerProducersOrdered();
+        var mapOfWinners = transformWinnersToMap(winnersList);
         return calculateAwardsInterval(mapOfWinners);
     }
 
-    private Map<String, List<Long>> transformWinnersToMap(List<Movie> movieList) {
-        Map<String, List<Long>> winnerProducers = new HashMap<>();
-
-        for (Movie movie : movieList) {
-            if (movie.isWinner()) {
-                for (String producer : movie.getProducers().split(",| and ")) {
-                    producer = producer.trim();
-                    winnerProducers.computeIfAbsent(producer, k -> new ArrayList<>()).add(movie.getReleaseYear());
-                }
-            }
-        }
-
-        return winnerProducers;
+    private Map<String, List<Long>> transformWinnersToMap(List<ProducerWinnerDTO> winnersList) {
+        return winnersList.stream()
+                .flatMap(winner -> Arrays.stream(winner.producers().split("\\s*(?:,|and)\\s*"))
+                        .map(String::trim)
+                        .map(producer -> Map.entry(producer, winner.releaseYear())))
+                .collect(Collectors.groupingBy(
+                        Map.Entry::getKey,
+                        Collectors.mapping(Map.Entry::getValue, Collectors.toList())
+                ));
     }
 
     private ProducerAwardIntervalsResponseDTO calculateAwardsInterval(Map<String, List<Long>> mapOfWinners) {
-        List<ProducerAwardResponseDTO> intervals = new ArrayList<>();
-        for (var entry : mapOfWinners.entrySet()) {
-            List<Long> years = entry.getValue().stream().sorted().toList();
-            String producer = entry.getKey();
-            for (int i = 1; i < years.size(); i++) {
-                intervals.add(ProducerAwardResponseDTO.builder()
-                                .producers(producer)
+        List<ProducerAwardResponseDTO> intervals = mapOfWinners.entrySet().stream()
+                .filter(entry -> entry.getValue().size() > 1)
+                .flatMap(entry -> {
+                    List<Long> years = entry.getValue();
+                    List<ProducerAwardResponseDTO> list = new ArrayList<>();
+                    for (int i = 1; i < years.size(); i++) {
+                        long previousWin = years.get(i - 1);
+                        long followingWin = years.get(i);
+                        list.add(ProducerAwardResponseDTO.builder()
+                                .producer(entry.getKey())
                                 .interval(years.get(i) - years.get(i - 1))
-                                .previousWin(years.get(i - 1))
-                                .followingWin(years.get(i))
-                                .build()
-                );
-            }
-        }
+                                .previousWin(previousWin)
+                                .followingWin(followingWin)
+                                .build());
+                    }
+                    return list.stream();
+                })
+                .toList();
 
         if (intervals.isEmpty()){
             return ProducerAwardIntervalsResponseDTO.builder().build();
