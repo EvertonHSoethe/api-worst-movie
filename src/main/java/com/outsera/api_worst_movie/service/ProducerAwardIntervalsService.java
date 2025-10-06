@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -23,11 +22,11 @@ public class ProducerAwardIntervalsService {
 
     public ProducerAwardIntervalsResponseDTO getProducerAwardIntervals() {
         var winnersList = movieRepository.findWinnerProducersOrdered();
-        var mapOfWinners = transformWinnersToMap(winnersList);
+        var mapOfWinners = transformWinnersToMapSplitedByProducers(winnersList);
         return calculateAwardsInterval(mapOfWinners);
     }
 
-    private Map<String, List<Long>> transformWinnersToMap(List<ProducerWinnerDTO> winnersList) {
+    private Map<String, List<Long>> transformWinnersToMapSplitedByProducers(List<ProducerWinnerDTO> winnersList) {
         return winnersList.stream()
                 .flatMap(winner -> PRODUCER_SPLIT_PATTERN.splitAsStream(winner.producers())
                         .map(String::trim)
@@ -49,9 +48,9 @@ public class ProducerAwardIntervalsService {
             String producer = entry.getKey();
             List<Long> years = entry.getValue();
 
-            if (years.size() < 2) continue;
+            if (years.size() < 2)
+                continue;
 
-            Collections.sort(years);
             long prev = years.get(0);
 
             for (int i = 1; i < years.size(); i++) {
